@@ -1,4 +1,4 @@
-#define F_CPU (6L*1000L*1000L)                  /* oscillator-frequency in Hz */
+#define F_CPU (8L*1000L*1000L)                  /* oscillator-frequency in Hz */
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -30,6 +30,12 @@ void uart_puts (char *s) {
 }
 
 void init(void) {
+  // TX:
+  DDRD  |=  _BV(PD1);
+  // RX:
+  DDRD  &= ~_BV(PD0);
+  PORTD |=  _BV(PD0);
+
   // set baud rate
   UBRRH = (uint8_t)(UART_BAUD_CALC(UART_BAUD_RATE,F_CPU)>>8);
   UBRRL = (uint8_t)UART_BAUD_CALC(UART_BAUD_RATE,F_CPU);
@@ -38,7 +44,7 @@ void init(void) {
   UCSRB = (1 << RXEN) | (1 << TXEN) | (1 << RXCIE);
 
   //asynchronous 8N1
-  UCSRC = (1 << UMSEL) | (3 << UCSZ0);
+  //UCSRC = /*(1 << UMSEL) |*/ (1 << UCSZ1) | (1 << UCSZ0);
 }
 
 // INTERRUPT can be interrupted
@@ -53,14 +59,19 @@ int main(void) {
   init(); // init USART
   sei();  // enable interrupts
 
-  // TX:
-  DDRD  |=  _BV(PD1);
-
-  // RX:
-  DDRD  &= ~_BV(PD0);
-  PORTD |=  _BV(PD0);
-
   //DDRD |= (1<<PD0) | (1<<PD1);
+
+  // flickering
+#if 0
+  DDRB|=0xFF;
+  while(0)
+  {
+    PINB=0xFF;
+    delay(10);
+    PINB=0x00;
+    delay(10);
+  }
+#endif
 
   while(1)
   {
