@@ -23,9 +23,11 @@ usart.o : usart.c
 
 flash_mcu:
 	avrdude -P avrdoper -c stk500v2 -p t2313 -U flash:w:usart.bin
-	#avrdude -P avrdoper -c stk500v2 -p m8 -U lfuse:w:255:m
-	#avrdude -P avrdoper -c stk500v2 -p t2313 -U lfuse:w:0xCC:m -U hfuse:w:0xD9:m
-	avrdude -P avrdoper -c stk500v2 -p t2313 -U lfuse:w:0xe4:m -U hfuse:w:0xdf:m
+	#avrdude -P avrdoper -c stk500v2 -p t2313 -U lfuse:w:0xe4:m -U hfuse:w:0xdf:m
+	avrdude -P avrdoper -c stk500v2 -p t2313 -U lfuse:w:0xe0:m -U hfuse:w:0xdf:m
+
+setup_ft232:
+	ft232r_prog --cbus2 Clk6 --manufacturer "BaSz" --product "usb power controller" --max-bus-power 500
 
 #-------------------
 clean:

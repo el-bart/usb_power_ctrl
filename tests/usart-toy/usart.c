@@ -1,4 +1,4 @@
-#define F_CPU (8L*1000L*1000L)                  /* oscillator-frequency in Hz */
+#define F_CPU (6L*1000L*1000L)                  /* oscillator-frequency in Hz */
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -58,20 +58,6 @@ ISR (USART_RX_vect ) { // USART RX interrupt
 int main(void) {
   init(); // init USART
   sei();  // enable interrupts
-
-  //DDRD |= (1<<PD0) | (1<<PD1);
-
-  // flickering
-#if 0
-  DDRB|=0xFF;
-  while(0)
-  {
-    PINB=0xFF;
-    delay(10);
-    PINB=0x00;
-    delay(10);
-  }
-#endif
 
   while(1)
   {
