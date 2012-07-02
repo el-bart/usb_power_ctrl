@@ -1,0 +1,7 @@
+microcontroller uses 6MHz signal provided by the FT232 chip, on CBUS2 pin. it needs to be
+programmed so, since this is not FT232's default setting.
+
+KANDA connector is optional - it is used for programming device only. can be skipped in production.
+
+device can consume more current, than FT232's default 90mA. it is usually about~85mA per enabled
+relay, plus few mA for electronics. it requires to be programmed to inform USB HUB about it.

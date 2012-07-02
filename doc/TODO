@@ -1,5 +1,2 @@
-* make hardware board.
 * prepare plain-text protocol.
-* implement device driver:
-  - 
-* 
+* implement device driver in Python.

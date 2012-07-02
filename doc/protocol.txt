@@ -1,0 +1,9 @@
+protocol description.
+
+device is communication via TTL-level RS-232, via USB (FT232 chip). emulated COM port needs to be
+set to 9600,8,N,1 in order to work.
+
+each command is ended with new line (LF, CR or any sequence of them). following commands
+are available to the user:
+
+hello - sends greeting message ("USB power control 
