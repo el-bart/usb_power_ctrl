@@ -8,6 +8,11 @@
 
 namespace
 {
+// some commonly used flash strings are here:
+const char g_tooManyArgsStr[] PROGMEM = "too many args";
+const char g_defaultStr[] PROGMEM     = "default";
+
+
 // s1 - string in RAM, s2 - string in FLASH
 bool strEqRF(const char* s1, const char* s2)
 {
@@ -68,7 +73,7 @@ void Processor::process(char *buf)
     return;
   }
 
-  if( strEqRF(cmd, PSTR("default")) )
+  if( strEqRF(cmd, g_defaultStr) )
   {
     handleDefault(tokenizer);
     return;
@@ -97,7 +102,7 @@ void Processor::handleHello(Tokenizer& tokenizer)
 {
   if( tokenizer.getNextToken()!=nullptr )
   {
-    errorFlash( PSTR("too many args") );
+    errorFlash(g_tooManyArgsStr);
     return;
   }
   // send the response
@@ -122,7 +127,7 @@ void Processor::handlePort(Tokenizer& tokenizer)
 
 void Processor::handleDefault(Tokenizer& tokenizer)
 {
-  handleStateChangeImpl(tokenizer, PSTR("default "), &Relays::setDefault);
+  handleStateChangeImpl(tokenizer, g_defaultStr, &Relays::setDefault);
 }
 
 
@@ -132,7 +137,7 @@ void Processor::handleStatus(Tokenizer& tokenizer)
   // sanity checks
   if( tokenizer.getNextToken()!=nullptr )
   {
-    errorFlash( PSTR("too many args") );
+    errorFlash(g_tooManyArgsStr);
     return;
   }
   if(mode==nullptr)
@@ -147,7 +152,7 @@ void Processor::handleStatus(Tokenizer& tokenizer)
     m='c';
   else
   {
-    if( strEqRF(mode, PSTR("default")) )
+    if( strEqRF(mode, g_defaultStr) )
       m='d';
     else
     {
@@ -195,7 +200,7 @@ void Processor::handleStateChangeImpl(Tokenizer& tokenizer, const char *flashNam
   // sanity checks
   if( tokenizer.getNextToken()!=nullptr )
   {
-    errorFlash( PSTR("too many args") );
+    errorFlash(g_tooManyArgsStr);
     return;
   }
   if(num==nullptr || state==nullptr)
