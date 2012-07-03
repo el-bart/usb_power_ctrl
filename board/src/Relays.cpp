@@ -21,4 +21,8 @@ Relays::Relays(void)
   PORTB &=~_BV(PB3);
 
   static_assert( PORTS_COUNT==4, "update this code" );
+
+  // by deafult all ports are off, for now
+  for(uint8_t i=0; i<PORTS_COUNT; ++i)
+    state_[i]=false;
 }
