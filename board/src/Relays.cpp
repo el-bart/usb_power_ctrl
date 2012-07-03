@@ -7,24 +7,16 @@
 
 Relays::Relays(void)
 {
-  // port PB0
-  DDRB  |= _BV(PB0);
-  PORTB &=~_BV(PB0);
-  // port PB1
-  DDRB  |= _BV(PB1);
-  PORTB &=~_BV(PB1);
-  // port PB2
-  DDRB  |= _BV(PB2);
-  PORTB &=~_BV(PB2);
-  // port PB3
-  DDRB  |= _BV(PB3);
-  PORTB &=~_BV(PB3);
-
   static_assert( PORTS_COUNT==4, "update this code" );
+  const uint8_t lut[PORTS_COUNT]={PB0, PB1, PB2, PB3};
 
-  // by deafult all ports are off, for now
+  // configure each port
   for(uint8_t i=0; i<PORTS_COUNT; ++i)
-    state_[i]=false;
+  {
+    state_[i] = getDefault(i);  // read default port state
+    DDRB |= _BV( lut[i] );      // setup this port as output
+    set( i, state_[i] );        // set state to the default value
+  }
 }
 
 
@@ -49,4 +41,16 @@ bool Relays::get(uint8_t n) const
   if(PORTS_COUNT<=n)
     return false;
   return state_[n];
+}
+
+
+void Relays::setDefault(uint8_t n, bool state)
+{
+}
+
+
+bool Relays::getDefault(uint8_t n) const
+{
+  // TODO
+  return false;
 }

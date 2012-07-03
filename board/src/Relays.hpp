@@ -15,6 +15,9 @@ public:
   void set(uint8_t n, bool state);
   bool get(uint8_t n) const;
 
+  void setDefault(uint8_t n, bool state);
+  bool getDefault(uint8_t n) const;
+
 private:
   bool state_[PORTS_COUNT];
 };
