@@ -49,6 +49,13 @@ int main(void)
   USART::init();                                    // configure serial interface
   sei();                                            // enable interrupts globally
 
+  for(;;)
+  {
+    for(char c='a'; c<='z'; ++c)
+      USART::send(c);
+    USART::send('\n');
+    _delay_ms(250);
+  }
   for(;;);      // TODO: just for now
   return 0;
 } // main()

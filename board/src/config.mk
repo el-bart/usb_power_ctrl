@@ -1,5 +1,5 @@
 # name of the application
-export PROGRAM_NAME:=rt-controller
+export PROGRAM_NAME:=usb-pwr-ctrl
 
 # toolchain
 export CC :=avr-gcc

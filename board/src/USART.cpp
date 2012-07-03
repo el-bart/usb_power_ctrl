@@ -61,9 +61,6 @@ void USART::init(void)
   // clock devider register (computed from baud rate and oscilator frequency)
   UBRRH=(uint8_t)( (USART_UBRR(USART_BAUD, F_CPU)>>8) & 0x00FF );
   UBRRL=(uint8_t)( (USART_UBRR(USART_BAUD, F_CPU)>>0) & 0x00FF );
-  // set single speed
-  UCSRA =0x00;
-  UCSRA&=~_BV(U2X);
 
   // enable interrupts
   UCSRB|= _BV(RXCIE);   // RX complete
@@ -71,22 +68,6 @@ void USART::init(void)
   // enable transciever
   UCSRB|= _BV(RXEN);    // RX enable
   UCSRB|= _BV(TXEN);    // TX enable
-
-  // configure 8-bit transmition mode
-  // NOTE: there is a bug in spec at this point - UCSZ[01] must be 0 not 1 here!
-  UCSRB&=~_BV(UCSZ2);   // 0
-  UCSRC&=~_BV(UCSZ1);   // 0 (!)
-  UCSRC&=~_BV(UCSZ0);   // 0 (!)
-  // configure no parity mode
-  UCSRC&=~_BV(UPM1);
-  UCSRC&=~_BV(UPM0);
-  // configure one stop bit
-  UCSRC&=~_BV(USBS);
-
-  // other configuration options
-  // TODO: should be UCSRC|= _BV(UMSEL);   // synchronous mode
-  //UCSRC&=~_BV(UMSEL);   // synchronous mode
-  //UCSRC&=~_BV(UCPOL);   // clock polarity mode
 
   // configure proper pins as in (RX) and out (TX)
   DDRD &=~_BV(PD0);     // RX as in
