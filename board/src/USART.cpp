@@ -5,55 +5,22 @@
 #include "config.hpp"
 
 #include <avr/io.h>
-#include <avr/interrupt.h>
 
-#include "uassert.hpp"
 #include "USART.hpp"
-#include "Queue.hpp"
 
 #define USART_UBRR(baud,f) ( ((f)/((baud)*16L)) -1 )
 
 // TODO: add test for baud-rate error and show error if value is over 1%
 
-//
-// I/O queues
-//
+
 namespace
 {
-Queue g_inQ;
-Queue g_outQ;
+inline void sendDataImpl(const char c)
+{
+  while( !(UCSRA & _BV(UDRE)) ) {}; // wait until we can send
+  UDR = c;                          // send character
+}
 } // unnamed namespace
-
-
-static inline void sendDataImpl(void)
-{
-  uassert( UCSRA & _BV(UDRE) );
-  UDR=g_outQ.pop();
-}
-
-// USART RX completed interrupt
-ISR(USART_RX_vect)
-{
-  const uint8_t c=UDR;          // read form hardware ASAP
-  if( g_inQ.full() )            // if queue is full, drop last element
-    g_inQ.pop();
-  g_inQ.push(c);                // enqueue new byte
-}
-
-// USART TX completed interrupt
-ISR(USART_TX_vect)
-{
-  if( !g_outQ.empty() )         // if have something to send
-    sendDataImpl();
-}
-
-// USART data register is empty interrupt
-ISR(USART_UDRE_vect)
-{
-  UCSRB&=~_BV(UDRIE);           // data registry empty - disable interrupt
-  if( g_outQ.size()>0 )         // if data register is empty and we have data to send
-    sendDataImpl();             // we can send it now
-}
 
 
 void USART::init(void)
@@ -62,9 +29,6 @@ void USART::init(void)
   UBRRH=(uint8_t)( (USART_UBRR(USART_BAUD, F_CPU)>>8) & 0x00FF );
   UBRRL=(uint8_t)( (USART_UBRR(USART_BAUD, F_CPU)>>0) & 0x00FF );
 
-  // enable interrupts
-  UCSRB|= _BV(RXCIE);   // RX complete
-  UCSRB|= _BV(TXCIE);   // TX complete
   // enable transciever
   UCSRB|= _BV(RXEN);    // RX enable
   UCSRB|= _BV(TXEN);    // TX enable
@@ -75,30 +39,22 @@ void USART::init(void)
   DDRD |= _BV(PD1);     // TX as out
 }
 
-void USART::send(uint8_t b)
+void USART::send(char b)
 {
-  while( g_outQ.full() );           // wait for space in queue
-  g_outQ.push(b);                   // enqueue next char to send
-  if( g_outQ.size()==1 )            // this might be first char to send
-    UCSRB|=_BV(UDRIE);              // signal on data registry empty.
-                                    // if transmition has not yet started this will
-                                    // send initial (first) byte as soon as USART is ready
+  sendDataImpl(b);
 }
 
-void USART::send(uint8_t *b, size_t size)
+void USART::send(const char *str)
 {
-  uassert(b!=NULL);
-  for(size_t i=0; i<size; ++i)
-    send(b[i]);
+  if(str==nullptr)
+    return;
+  for(; *str!='\0'; ++str)
+    sendDataImpl(*str);
 }
 
-size_t USART::inQueueSize(void)
-{
-  return g_inQ.size();              // return input queue size
-}
 
-uint8_t USART::receive(void)
+char USART::receive(void)
 {
-  while( g_inQ.empty() );           // wait for the data
-  return g_inQ.pop();               // return read data
+  while( !(UCSRA & _BV(RXC)) ) {};  // wait until data is ready
+  return UDR;                       // read the char and return it
 }

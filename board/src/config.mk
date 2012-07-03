@@ -12,5 +12,5 @@ export MCU_TYPE:=attiny2313
 
 # extra flags, if needed
 export CFLAGS  +=-mmcu=$(MCU_TYPE)
-export CXXFLAGS+=-mmcu=$(MCU_TYPE)
+export CXXFLAGS+=-mmcu=$(MCU_TYPE) -std=c++11
 export LDFLAGS +=-mmcu=$(MCU_TYPE)
