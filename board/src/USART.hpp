@@ -23,6 +23,10 @@ struct USART
    *  \param str string to be sent.
    */
   static void send(const char *str);
+  /** \brief sends given string, placed in FLASH not in RAM.
+   *  \param str string present in the FLASH, to be sent.
+   */
+  static void sendFlash(const char *str);
 
   /** \brief get one byte form the usart.
    *  \return data read.

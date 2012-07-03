@@ -1,29 +1,37 @@
 #include "config.hpp"
+
+#include <avr/pgmspace.h>
+
 #include "Processor.hpp"
 #include "USART.hpp"
 
+
 namespace
 {
-bool strEq(const char* s1, const char* s2)
+// s1 - string in RAM, s2 - string in FLASH
+bool strEqRF(const char* s1, const char* s2)
 {
-  // both nulls or are the same string address?
-  if(s1==s2)
+  // both nulls?
+  if(s1==nullptr && s2==nullptr)
     return true;
+
   // check each char...
   while(true)
   {
+    const char c2=pgm_read_byte(s2);
+    // end of string?
+    if(*s1==0 && c2==0)
+      return true;
     // non-equal characters?
-    if(*s1!=*s2)
+    if(*s1!=c2)
       return false;
     // one of the strings is shorter?
-    if(*s1==0 || *s2==0)
+    if(*s1==0 || c2==0)
       return false;
     // move on to the next character
     ++s1;
     ++s2;
   }
-  // no differences found - strings are equal then!
-  return true;
 } // strEq()
 } // unnamed namespace
 
@@ -38,55 +46,56 @@ void Processor::process(char *buf)
   const char *cmd=tokenizer.getNextToken();
   if(cmd==NULL)
   {
-    error("no command specified");
+    errorFlash( PSTR("no command") );
     return;
   }
 
-  if( strEq(cmd, "hello") )
+  if( strEqRF(cmd, PSTR("hello")) )
   {
     handleHello(tokenizer);
     return;
   }
 
-  if( strEq(cmd, "port") )
+  if( strEqRF(cmd, PSTR("port")) )
   {
     handlePort(tokenizer);
     return;
   }
 
-  if( strEq(cmd, "default") )
+  if( strEqRF(cmd, PSTR("default")) )
   {
     handleDefault(tokenizer);
     return;
   }
 
-  if( strEq(cmd, "status") )
+  if( strEqRF(cmd, PSTR("status")) )
   {
     handleStatus(tokenizer);
     return;
   }
 
-  error("unknown command specified");
+  errorFlash( PSTR("unknown command") );
 }
 
 
-void Processor::error(const char *msg) const
+void Processor::errorFlash(const char *str)
 {
-  USART::send("ERROR: ");
-  if(msg!=nullptr)
-    USART::send(msg);
+  USART::sendFlash( PSTR("ERROR: ") );
+  if(str!=nullptr)
+    USART::sendFlash(str);
+  USART::send('\n');
 }
 
 
-void Processor::handleHello(Tokenizer& tokenizer) const
+void Processor::handleHello(Tokenizer& tokenizer)
 {
   if( tokenizer.getNextToken()!=nullptr )
   {
-    error("too many arguments to hello command");
+    errorFlash( PSTR("too many args") );
     return;
   }
   // send the response
-  USART::send("USB power controller v");
+  USART::sendFlash( PSTR("USB power controller v") );
   USART::send('0'+VERSION_MAIN);
   USART::send('.');
   USART::send('0'+VERSION_MAJOR);
@@ -96,16 +105,63 @@ void Processor::handleHello(Tokenizer& tokenizer) const
 }
 
 
-void Processor::handlePort(Tokenizer& tokenizer) const
+void Processor::handlePort(Tokenizer& tokenizer)
+{
+  // tokenization
+  const char *num  =tokenizer.getNextToken();
+  const char *state=tokenizer.getNextToken();
+  // sanity checks
+  if( tokenizer.getNextToken()!=nullptr )
+  {
+    errorFlash( PSTR("too many args") );
+    return;
+  }
+  if(num==nullptr || state==nullptr)
+  {
+    errorFlash( PSTR("missing args") );
+    return;
+  }
+
+  // get port number
+  if(num[0]<'0' || '3'<num[0] || num[1]!=0)
+  {
+    errorFlash( PSTR("invalid port") );
+    return;
+  }
+  const uint8_t n=num[0]-'0';
+
+  // get state
+  bool flag;
+  if( strEqRF(state, PSTR("on")) )
+    flag=true;
+  else
+  {
+    if( strEqRF(state, PSTR("off")) )
+      flag=false;
+    else
+    {
+      errorFlash( PSTR("invalid state req") );
+      return;
+    }
+  }
+
+  // set new state
+  relays_.set(n, flag);
+
+  // send reply
+  USART::sendFlash( PSTR("port ") );
+  USART::send     ('0'+n);
+  USART::sendFlash( PSTR(" is ") );
+  USART::sendFlash( flag?PSTR("on"):PSTR("off") );
+  USART::send     ('\n');
+}
+
+
+void Processor::handleDefault(Tokenizer& tokenizer)
 {
 }
 
 
-void Processor::handleDefault(Tokenizer& tokenizer) const
-{
-}
-
-
-void Processor::handleStatus(Tokenizer& tokenizer) const
+void Processor::handleStatus(Tokenizer& tokenizer)
 {
 }

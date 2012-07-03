@@ -5,6 +5,7 @@
 #include "config.hpp"
 
 #include <avr/io.h>
+#include <avr/pgmspace.h>
 
 #include "USART.hpp"
 
@@ -39,10 +40,12 @@ void USART::init(void)
   DDRD |= _BV(PD1);     // TX as out
 }
 
+
 void USART::send(char b)
 {
   sendDataImpl(b);
 }
+
 
 void USART::send(const char *str)
 {
@@ -50,6 +53,15 @@ void USART::send(const char *str)
     return;
   for(; *str!='\0'; ++str)
     sendDataImpl(*str);
+}
+
+
+void USART::sendFlash(const char *str)
+{
+  if(str==nullptr)
+    return;
+  for(; pgm_read_byte(str)!='\0'; ++str)
+    sendDataImpl( pgm_read_byte(str) );
 }
 
 

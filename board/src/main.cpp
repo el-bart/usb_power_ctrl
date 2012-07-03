@@ -6,8 +6,6 @@
 
 #include "USART.hpp"
 #include "Processor.hpp"
-#include "Relays.hpp"
-#include "uassert.hpp"
 
 
 //
@@ -15,34 +13,37 @@
 //
 int main(void)
 {
-  Relays relays;                    // initialize relay controll interface
+  Processor proc;                   // initialize processor
   USART::init();                    // configure serial interface
 
   uint8_t   f=0;                    // poistion to write in buffer
   char      cmd[IO_BUFFER_SIZE];    // command buffer
   bool      applied=false;          // checks if last command was applied
   cmd[0]=0;                         // buffor is empty by default
-  Processor proc;                   // initialize processor
+
+USART::send("init done\n");
 
   // main loop
   for(;;)
   {
     // read char from port
-//USART::send('A');
-continue;
     const char c=USART::receive();
 USART::send(c);
 
     // process it
     if(c=='\n' || c=='\r')
     {
-USART::send("new line");
+//USART::send("PROCESSING: ");
+//USART::send(cmd);
       // if command was alrady applied, just skip next new lines
       if(applied)
         continue;
       // end of line means processing is applied
       proc.process(cmd);
       applied=true;
+      // reset command buffer
+      cmd[0]=0;
+      f     =0;
     }
     else
     {

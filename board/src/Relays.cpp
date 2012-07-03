@@ -26,3 +26,27 @@ Relays::Relays(void)
   for(uint8_t i=0; i<PORTS_COUNT; ++i)
     state_[i]=false;
 }
+
+
+void Relays::set(uint8_t n, bool state)
+{
+  // sanity check
+  if(PORTS_COUNT<=n)
+    return;
+  // save change
+  state_[n]=state;
+  // set state on port
+  const uint8_t lut[PORTS_COUNT]={PB0, PB1, PB2, PB3};
+  if(state)
+    PORTB |=  _BV(lut[n]);
+  else
+    PORTB &= ~_BV(lut[n]);
+}
+
+
+bool Relays::get(uint8_t n) const
+{
+  if(PORTS_COUNT<=n)
+    return false;
+  return state_[n];
+}
