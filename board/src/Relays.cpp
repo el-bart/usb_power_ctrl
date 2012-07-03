@@ -1,9 +1,18 @@
 #include "config.hpp"
 
 #include <avr/io.h>
+#include <avr/eeprom.h>
 
 #include "Relays.hpp"
 
+
+namespace
+{
+inline uint8_t* eepromStateAddress(const uint8_t n)
+{
+  return static_cast<uint8_t*>(0x0) + n;
+}
+}
 
 Relays::Relays(void)
 {
@@ -46,11 +55,19 @@ bool Relays::get(uint8_t n) const
 
 void Relays::setDefault(uint8_t n, bool state)
 {
+  // sanity check
+  if(PORTS_COUNT<=n)
+    return;
+  // write to eeprom
+  eeprom_update_byte( eepromStateAddress(n), state );
 }
 
 
 bool Relays::getDefault(uint8_t n) const
 {
-  // TODO
-  return false;
+  // sanity check
+  if(PORTS_COUNT<=n)
+    return false;
+  // read data from eeprom (converted to bool)
+  return eeprom_read_byte( eepromStateAddress(n) );
 }

@@ -21,20 +21,15 @@ int main(void)
   bool      applied=false;          // checks if last command was applied
   cmd[0]=0;                         // buffor is empty by default
 
-USART::send("init done\n");
-
   // main loop
   for(;;)
   {
     // read char from port
     const char c=USART::receive();
-USART::send(c);
 
     // process it
     if(c=='\n' || c=='\r')
     {
-//USART::send("PROCESSING: ");
-//USART::send(cmd);
       // if command was alrady applied, just skip next new lines
       if(applied)
         continue;
@@ -61,8 +56,6 @@ USART::send(c);
   }
 
   // this code is never reached...
-  for(;;)
-    USART::send("oops...");
   return 0;
 } // main()
 

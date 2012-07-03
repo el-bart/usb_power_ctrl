@@ -52,7 +52,7 @@ void Processor::process(char *buf)
   const char *cmd=tokenizer.getNextToken();
   if(cmd==NULL)
   {
-    errorFlash( PSTR("no command") );
+    errorFlash( PSTR("no cmd") );
     return;
   }
 
@@ -80,7 +80,7 @@ void Processor::process(char *buf)
     return;
   }
 
-  errorFlash( PSTR("unknown command") );
+  errorFlash( PSTR("unknown cmd") );
 }
 
 
@@ -113,60 +113,13 @@ void Processor::handleHello(Tokenizer& tokenizer)
 
 void Processor::handlePort(Tokenizer& tokenizer)
 {
-  // tokenization
-  const char *num  =tokenizer.getNextToken();
-  const char *state=tokenizer.getNextToken();
-  // sanity checks
-  if( tokenizer.getNextToken()!=nullptr )
-  {
-    errorFlash( PSTR("too many args") );
-    return;
-  }
-  if(num==nullptr || state==nullptr)
-  {
-    errorFlash( PSTR("missing args") );
-    return;
-  }
-
-  // get port number
-  if(num[0]<'0' || '3'<num[0] || num[1]!=0)
-  {
-    errorFlash( PSTR("invalid port") );
-    return;
-  }
-  const uint8_t n=num[0]-'0';
-
-  // get state
-  bool flag;
-  if( strEqRF(state, PSTR("on")) )
-    flag=true;
-  else
-  {
-    if( strEqRF(state, PSTR("off")) )
-      flag=false;
-    else
-    {
-      errorFlash( PSTR("invalid state req") );
-      return;
-    }
-  }
-
-  // set new state
-  relays_.set(n, flag);
-
-  // send reply
-  USART::sendFlash( PSTR("port ") );
-  USART::send     ('0'+n);
-  USART::sendFlash( PSTR(" is ") );
-  sendOnOff(flag);
-  USART::send     ('\n');
+  handleStateChangeImpl(tokenizer, PSTR("port "), &Relays::set);
 }
 
 
 void Processor::handleDefault(Tokenizer& tokenizer)
 {
-  // TODO
-  errorFlash( PSTR("not yet implemented...") );
+  handleStateChangeImpl(tokenizer, PSTR("default "), &Relays::setDefault);
 }
 
 
@@ -181,7 +134,7 @@ void Processor::handleStatus(Tokenizer& tokenizer)
   }
   if(mode==nullptr)
   {
-    errorFlash( PSTR("invalid mode") );
+    errorFlash( PSTR("no mode") );
     return;
   }
 
@@ -209,9 +162,8 @@ void Processor::handleStatus(Tokenizer& tokenizer)
            states[i]=relays_.get(i);
          break;
     case 'd':
-         // TODO
-         errorFlash( PSTR("not yet implemented - sorry") );
-         return;
+         for(uint8_t i=0; i<PORTS_COUNT; ++i)
+           states[i]=relays_.getDefault(i);
          break;
     default:
          // this code is never reeached
@@ -228,4 +180,57 @@ void Processor::handleStatus(Tokenizer& tokenizer)
     sendOnOff(states[i]);
   }
   USART::send('\n');
+}
+
+
+void Processor::handleStateChangeImpl(Tokenizer& tokenizer, const char *flashNameStr, void (Relays::*setter)(uint8_t, bool) )
+{
+  // tokenization
+  const char *num  =tokenizer.getNextToken();
+  const char *state=tokenizer.getNextToken();
+  // sanity checks
+  if( tokenizer.getNextToken()!=nullptr )
+  {
+    errorFlash( PSTR("too many args") );
+    return;
+  }
+  if(num==nullptr || state==nullptr)
+  {
+    errorFlash( PSTR("missing args") );
+    return;
+  }
+
+  // get port number
+  static_assert( PORTS_COUNT<10, "ports count can have just one digit" );
+  if(num[0]<'0' || ('0'+PORTS_COUNT)<num[0] || num[1]!=0)
+  {
+    errorFlash( PSTR("invalid port") );
+    return;
+  }
+  const uint8_t n=num[0]-'0';
+
+  // get state
+  bool flag;
+  if( strEqRF(state, PSTR("on")) )
+    flag=true;
+  else
+  {
+    if( strEqRF(state, PSTR("off")) )
+      flag=false;
+    else
+    {
+      errorFlash( PSTR("invalid state req") );
+      return;
+    }
+  }
+
+  // set new state
+  (relays_.*setter)(n, flag);
+
+  // send reply
+  USART::sendFlash(flashNameStr);
+  USART::send     ('0'+n);
+  USART::sendFlash( PSTR(" is ") );
+  sendOnOff(flag);
+  USART::send     ('\n');
 }

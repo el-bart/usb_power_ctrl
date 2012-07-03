@@ -17,6 +17,8 @@ private:
   void handleDefault(Tokenizer& tokenizer);
   void handleStatus(Tokenizer& tokenizer);
 
+  void handleStateChangeImpl(Tokenizer& tokenizer, const char *flashNameStr, void (Relays::*setter)(uint8_t, bool) );
+
   Relays relays_;
 };
 
