@@ -8,17 +8,15 @@ are available to the user:
 
 
 hello
-sends greeting message. requires device to report. proper response is: "USB power controller vX.Y.Z",
+sends greeting message. requires device to report. proper response is: "USB pwr ctrl vX.Y.Z",
 where X,Y,Z are version numbers.
 
 port N {on|off}
-changes state of port number N to on or off. response is of the form "port N is S", where
-N is a port number and S in "on" or "off" string.
+changes state of port number N to on or off. response is "OK".
 
 default N {on|off}
 sets default (device power-on) state of the port number N to the on or off. this setting is
-stored in the nonvolatile memory, thus setups is set until it is changed. response is of
-the form "default N is S", where N is a port number and S is "on" or "off".
+stored in the nonvolatile memory, thus setups is set until it is changed. response is "OK".
 
 status {current|default}
 returns information about ports being on/off. "current" mode returns actual state, currently set.
@@ -26,5 +24,4 @@ returns information about ports being on/off. "current" mode returns actual stat
 "0=A 1=B 2=C 3=D", where numbers are port states and letters are their "on" or "off" states.
 
 
-in case of an error, "ERROR: D" is returned to the user, where D is error description. note that
-"description" part can be empty.
+in case of an error, "ERROR" is returned to the user.
