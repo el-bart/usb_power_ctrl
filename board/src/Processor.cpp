@@ -33,6 +33,12 @@ bool strEqRF(const char* s1, const char* s2)
     ++s2;
   }
 } // strEq()
+
+
+void sendOnOff(bool flag)
+{
+  USART::sendFlash( flag?PSTR("on"):PSTR("off") );
+}
 } // unnamed namespace
 
 
@@ -152,16 +158,74 @@ void Processor::handlePort(Tokenizer& tokenizer)
   USART::sendFlash( PSTR("port ") );
   USART::send     ('0'+n);
   USART::sendFlash( PSTR(" is ") );
-  USART::sendFlash( flag?PSTR("on"):PSTR("off") );
+  sendOnOff(flag);
   USART::send     ('\n');
 }
 
 
 void Processor::handleDefault(Tokenizer& tokenizer)
 {
+  // TODO
+  errorFlash( PSTR("not yet implemented...") );
 }
 
 
 void Processor::handleStatus(Tokenizer& tokenizer)
 {
+  const char *mode=tokenizer.getNextToken();
+  // sanity checks
+  if( tokenizer.getNextToken()!=nullptr )
+  {
+    errorFlash( PSTR("too many args") );
+    return;
+  }
+  if(mode==nullptr)
+  {
+    errorFlash( PSTR("invalid mode") );
+    return;
+  }
+
+  // parse requested mode
+  char m;
+  if( strEqRF(mode, PSTR("current")) )
+    m='c';
+  else
+  {
+    if( strEqRF(mode, PSTR("default")) )
+      m='d';
+    else
+    {
+      errorFlash( PSTR("invalid mode req") );
+      return;
+    }
+  }
+
+  // process
+  bool states[PORTS_COUNT];
+  switch(m)
+  {
+    case 'c':
+         for(uint8_t i=0; i<PORTS_COUNT; ++i)
+           states[i]=relays_.get(i);
+         break;
+    case 'd':
+         // TODO
+         errorFlash( PSTR("not yet implemented - sorry") );
+         return;
+         break;
+    default:
+         // this code is never reeached
+         break;
+  }
+
+  // send reply
+  for(uint8_t i=0; i<PORTS_COUNT; ++i)
+  {
+    if(i!=0)
+      USART::send(' ');
+    USART::send     ('0'+i);
+    USART::sendFlash( PSTR("=") );
+    sendOnOff(states[i]);
+  }
+  USART::send('\n');
 }
