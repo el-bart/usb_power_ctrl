@@ -8,7 +8,7 @@ are available to the user:
 
 
 hello
-sends greeting message. requires device to report. proper response is: "USB power control vX.Y.Z",
+sends greeting message. requires device to report. proper response is: "USB power controller vX.Y.Z",
 where X,Y,Z are version numbers.
 
 port N {on|off}
