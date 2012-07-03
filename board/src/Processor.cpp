@@ -102,10 +102,13 @@ void Processor::handleHello(Tokenizer& tokenizer)
   }
   // send the response
   USART::sendFlash( PSTR("USB power controller v") );
+  static_assert( VERSION_MAIN<10, "update this code" );
   USART::send('0'+VERSION_MAIN);
   USART::send('.');
+  static_assert( VERSION_MAJOR<10, "update this code" );
   USART::send('0'+VERSION_MAJOR);
   USART::send('.');
+  static_assert( VERSION_MINOR<10, "update this code" );
   USART::send('0'+VERSION_MINOR);
   USART::send('\n');
 }
@@ -175,6 +178,7 @@ void Processor::handleStatus(Tokenizer& tokenizer)
   {
     if(i!=0)
       USART::send(' ');
+    static_assert( PORTS_COUNT<10, "update this code to handle more ports" );
     USART::send     ('0'+i);
     USART::sendFlash( PSTR("=") );
     sendOnOff(states[i]);
@@ -229,6 +233,7 @@ void Processor::handleStateChangeImpl(Tokenizer& tokenizer, const char *flashNam
 
   // send reply
   USART::sendFlash(flashNameStr);
+  static_assert( PORTS_COUNT<10, "update this code to handle more ports" );
   USART::send     ('0'+n);
   USART::sendFlash( PSTR(" is ") );
   sendOnOff(flag);
