@@ -16,6 +16,14 @@
 #define USART_BAUD (9600L)
 
 // max queue size
-#define QUEUE_MAX_SIZE 16
+#define IO_BUFFER_SIZE 16
+
+// version
+#define VERSION_MAIN  0
+#define VERSION_MAJOR 1
+#define VERSION_MINOR 1
+
+// number of ports to controll
+#define PORTS_COUNT 4
 
 #endif
