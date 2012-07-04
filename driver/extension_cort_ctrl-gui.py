@@ -4,13 +4,18 @@
 #
 
 import sys
-import usbpwrctrl
+import platform
 import pygtk
 pygtk.require('2.0')
 import gtk
+import usbpwrctrl
 
-# default device to be used to communicate
+# by default use linux device
 defaultDevice="/dev/ttyUSB0"
+# in case of windows use other communication device
+if platform.system()=="Windows":
+    defaultDevice="COM4"
+
 
 def helpScreen():
     print(sys.argv[0])
