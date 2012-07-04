@@ -1,2 +1,12 @@
--- v?? --
-* TODO
+-- v0.2.0 --
+* protocol updated, to make it more coherent.
+* minor typos fixed.
+
+-- v0.1.1 --
+* USART transmission updated.
+* "toy" applications added for testing.
+* documentation added.
+
+-- v0.1.0 --
+* initial version of the board.
+* application skeleton.

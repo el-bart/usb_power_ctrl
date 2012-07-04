@@ -1,0 +1,14 @@
+installation
+
+1. hardware
+having PCB board, FT232 needs to be configured. to do this plug in USB cable and run (as root):
+make setup_ft232
+note that this target requires ft232r_prog to work. it can be downloaded form http://rtr.ca/ft232r.
+next step is compile software. to do this type:
+make release
+to flash uC with the new software type (as root):
+make flash_mcu
+
+2. driver
+driver part is written entirely in python.
+TODO
