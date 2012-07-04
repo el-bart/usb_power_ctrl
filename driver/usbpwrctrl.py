@@ -1,4 +1,7 @@
 #!/usr/bin/python
+#
+# module for controlling USB power controller device
+#
 
 import re
 import serial
@@ -6,7 +9,7 @@ import serial
 #
 # class for handling USB power controller device
 #
-class SerialPort:
+class Protocol:
     # create instance for a given device (ex. "/dev/ttyUSB0")
     def __init__(self, devName):
         self._devName=devName
@@ -76,3 +79,8 @@ class SerialPort:
         if resp.split()[0]=="ERROR:":
             raise Exception("unable to communicate with the device - it says: " + resp)
         return resp
+
+
+# sanity check
+if __name__=="__main__":
+    raise Exception("this is a module and should NOT be used as a raw script!")
