@@ -2,6 +2,7 @@
 * added exception handing in GUI.
 * fixed problem with opening serial port on windows.
 * changed GUI script's extension from .py to .pyw - this disables serial console on windows.
+* added prerequisites installation instructions.
 
 -- v0.3.0 --
 * python module for controlling the device added.

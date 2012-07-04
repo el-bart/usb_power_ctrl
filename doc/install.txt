@@ -1,6 +1,8 @@
 installation
 
+
 1. hardware
+
 having PCB board, FT232 needs to be configured. to do this plug in USB cable and run (as root):
 make setup_ft232
 note that this target requires ft232r_prog to work. it can be downloaded form http://rtr.ca/ft232r.
@@ -9,8 +11,24 @@ make release
 to flash uC with the new software type (as root):
 make flash_mcu
 
-2. driver
-driver part is written entirely in python. directory "driver" consists of the following elements:
+
+2. dependencies
+
+driver part is written entirely in python. it requires:
+  - python 2.7
+  - pygtk
+  - pyserial
+to install these on linux type:
+apt-get install python2.7 python-gtk2 python-serial
+on windows you need to download and install following packages:
+  - FTDI's driver for port: http://www.ftdichip.com/Drivers/CDM/CDM20824_Setup.exe
+  - PyGTK: http://ftp.gnome.org/pub/GNOME/binaries/win32/pygtk/2.24/pygtk-all-in-one-2.24.2.win32-py2.7.msi
+  - PySerial: http://sourceforge.net/projects/pyserial/files/pyserial/2.5/pyserial-2.5.win32.exe/download
+
+
+3. driver
+
+directory "driver" consists of the following elements:
 usbpwrctrl.py              - module that can be used to implement own control mechanisms on top.
 extension_cort_ctrl.py     - command line interface to the device
 extension_cort_ctrl-gui.py - GUI interface to the device.
