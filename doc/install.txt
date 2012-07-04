@@ -10,5 +10,7 @@ to flash uC with the new software type (as root):
 make flash_mcu
 
 2. driver
-driver part is written entirely in python.
-TODO
+driver part is written entirely in python. directory "driver" consists of the following elements:
+usbpwrctrl.py              - module that can be used to implement own control mechanisms on top.
+extension_cort_ctrl.py     - command line interface to the device
+extension_cort_ctrl-gui.py - GUI interface to the device.

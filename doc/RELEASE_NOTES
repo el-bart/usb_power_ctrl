@@ -1,7 +1,8 @@
--- v?? --
+-- v0.3.0 --
 * python module for controlling the device added.
-* command line script for controlling deivce added.
+* command line script for controlling device added.
 * GUI has been implemented in python.
+* installation has been described.
 
 -- v0.2.0 --
 * protocol updated, to make it more coherent.
