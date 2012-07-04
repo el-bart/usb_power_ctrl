@@ -16,10 +16,6 @@ class Protocol:
         self._dev=serial.Serial(port=devName,
                                 baudrate=9600,
                                 timeout=1)
-        # note: close is VERY important here - w/o this it does not work on windows...
-        # TODO: perhaps open/close should be removed at all, on both platforms?
-        self._dev.close()
-        self._dev.open()
         if self._dev.isOpen()!=True:
             raise Exception("cannot open device " + self._devName)
         # check for minimal supported version
