@@ -11,6 +11,7 @@ namespace
 // some commonly used flash strings are here:
 const char g_tooManyArgsStr[] PROGMEM = "too many args";
 const char g_defaultStr[] PROGMEM     = "default";
+const char g_portStr[] PROGMEM        = "port";
 
 
 // s1 - string in RAM, s2 - string in FLASH
@@ -67,7 +68,7 @@ void Processor::process(char *buf)
     return;
   }
 
-  if( strEqRF(cmd, PSTR("port")) )
+  if( strEqRF(cmd, g_portStr) )
   {
     handlePort(tokenizer);
     return;
@@ -121,7 +122,7 @@ void Processor::handleHello(Tokenizer& tokenizer)
 
 void Processor::handlePort(Tokenizer& tokenizer)
 {
-  handleStateChangeImpl(tokenizer, PSTR("port "), &Relays::set);
+  handleStateChangeImpl(tokenizer, g_portStr, &Relays::set);
 }
 
 
@@ -148,7 +149,7 @@ void Processor::handleStatus(Tokenizer& tokenizer)
 
   // parse requested mode
   char m;
-  if( strEqRF(mode, PSTR("current")) )
+  if( strEqRF(mode, g_portStr) )
     m='c';
   else
   {
@@ -238,6 +239,7 @@ void Processor::handleStateChangeImpl(Tokenizer& tokenizer, const char *flashNam
 
   // send reply
   USART::sendFlash(flashNameStr);
+  USART::send     (' ');
   static_assert( PORTS_COUNT<10, "update this code to handle more ports" );
   USART::send     ('0'+n);
   USART::sendFlash( PSTR(" is ") );

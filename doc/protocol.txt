@@ -20,8 +20,8 @@ sets default (device power-on) state of the port number N to the on or off. this
 stored in the nonvolatile memory, thus setups is set until it is changed. response is of
 the form "default N is S", where N is a port number and S is "on" or "off".
 
-status {current|default}
-returns information about ports being on/off. "current" mode returns actual state, currently set.
+status {port|default}
+returns information about ports being on/off. "port" mode returns actual state, set on ports.
 "default" mode returns power-on default state of the ports. response is of the form
 "0=A 1=B 2=C 3=D", where numbers are port states and letters are their "on" or "off" states.
 
