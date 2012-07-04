@@ -1,4 +1,4 @@
--- v?? --
+-- v0.4.0 --
 * added exception handing in GUI.
 * fixed problem with opening serial port on windows.
 * changed GUI script's extension from .py to .pyw - this disables serial console on windows.
