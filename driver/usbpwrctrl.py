@@ -21,8 +21,9 @@ class Protocol:
             raise Exception("cannot open device " + self._devName)
         # check for minimal supported version
         v=self.version()
+        # version v0.2.0 is sufficient for this driver
+        # note - last digit is not checked, since it is just a bugfix
         if not ( int(v[0])>0 or ( int(v[0])==0 and int(v[1])>=2 ) ):
-            # note - last digit is not checked, since it is just a bugfix
             raise Exception("unsupported version: " + self.versionStr())
 
     # returns version as a string
