@@ -137,6 +137,13 @@ class MainWindow:
 
 
 # init main window
-mw = MainWindow()
-# run GUI
-gtk.main()
+try:
+    mw = MainWindow()
+    # run GUI
+    gtk.main()
+except Exception as ex:
+    print("fatal exception: " + str(ex))
+    err = gtk.MessageDialog(None, 0, gtk.MESSAGE_ERROR, gtk.BUTTONS_CLOSE, str(ex) )
+    err.set_title("Fatal exception")
+    err.show()
+    err.run()
