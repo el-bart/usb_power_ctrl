@@ -1,0 +1,5 @@
+* when app is on, while cmd line changes dev state on/off and pressed/not-pressed states can varray.
+* add user defined labels to the ports (i.e. names), to make maintainability easier.
+* consider autoamtic selection of the proper serial port.
+* consider adding serial port selection window.
+* add saving configuration into a file.
