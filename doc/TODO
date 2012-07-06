@@ -3,3 +3,4 @@
 * consider autoamtic selection of the proper serial port.
 * consider adding serial port selection window.
 * add saving configuration into a file.
+* consider saving user-defined names in the EEPROM, so that if reenumeration changes device names, it will still be valid.
