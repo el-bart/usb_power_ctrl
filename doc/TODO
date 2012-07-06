@@ -4,3 +4,4 @@
 * consider adding serial port selection window.
 * add saving configuration into a file.
 * consider saving user-defined names in the EEPROM, so that if reenumeration changes device names, it will still be valid.
+* consider adding user-defined name of the device, to be saved in EEPROM, to be able to destinguish between instances of the same device connected to one computer.
