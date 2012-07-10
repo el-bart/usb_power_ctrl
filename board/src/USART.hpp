@@ -28,6 +28,10 @@ struct USART
    */
   static void sendFlash(const char *str);
 
+  /** \brief checks if any data has been received.
+   *  \return true when data has been received, false otherwise
+   */
+  static bool hasData(void);
   /** \brief get one byte form the usart.
    *  \return data read.
    */

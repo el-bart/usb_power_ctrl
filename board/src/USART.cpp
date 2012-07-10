@@ -65,8 +65,14 @@ void USART::sendFlash(const char *str)
 }
 
 
+bool USART::hasData(void)
+{
+  return (UCSRA & _BV(RXC));        // check if data has arrived
+}
+
+
 char USART::receive(void)
 {
-  while( !(UCSRA & _BV(RXC)) ) {};  // wait until data is ready
+  while( !hasData() ) {}            // wait until data is ready
   return UDR;                       // read the char and return it
 }
