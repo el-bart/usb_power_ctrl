@@ -111,8 +111,8 @@ flash_mcu:
 
 .PHONY: setup_ft232
 setup_ft232:
-	# setup proper parameters of the FT232 chip, enabling it to take more power, provide 6MHz clock and get sleep signal
-	ft232r_prog --cbus2 Clk6 --cbus3 Sleep --manufacturer "BaSz" --product "usb power controller" --max-bus-power 500
+	# setup proper parameters of the FT232 chip, enabling it to take more power and provide 6MHz clock
+	ft232r_prog --cbus2 Clk6 --manufacturer "BaSz" --product "usb power controller" --max-bus-power 500
 
 .PHONY: clean
 clean:
