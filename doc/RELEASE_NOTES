@@ -1,6 +1,6 @@
 -- v1.0.0 --
 * added watchdog for controlling uC's operations.
-* implemented reset, when USB is no longer in use, but poewr is still supplied.
+* implemented reset, when USB is no longer in use, but power is still supplied.
 
 -- v0.4.1 --
 * added missing pull-down resistors from transistors' base to the ground.
