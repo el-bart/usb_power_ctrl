@@ -19,8 +19,8 @@
 #define IO_BUFFER_SIZE 16
 
 // version
-#define VERSION_MAIN  0
-#define VERSION_MAJOR 4
+#define VERSION_MAIN  1
+#define VERSION_MAJOR 0
 #define VERSION_MINOR 0
 
 // number of ports to controll
