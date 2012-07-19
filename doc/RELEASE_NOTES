@@ -1,4 +1,4 @@
--- v?? --
+-- v1.0.0 --
 * added watchdog for controlling uC's operations.
 * implemented reset, when USB is no longer in use, but poewr is still supplied.
 
