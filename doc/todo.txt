@@ -1,8 +1,8 @@
-* when app is on, while cmd line changes dev state on/off and pressed/not-pressed states can varray.
+* when app is on, while cmd line changes dev state on/off and pressed/not-pressed states can vary.
 * add user defined labels to the ports (i.e. names), to make maintainability easier.
-* consider autoamtic selection of the proper serial port.
+* consider automatic selection of the proper serial port.
 * consider adding serial port selection window.
 * add saving configuration into a file.
 * consider saving user-defined names in the EEPROM, so that if reenumeration changes device names, it will still be valid.
-* consider adding user-defined name of the device, to be saved in EEPROM, to be able to destinguish between instances of the same device connected to one computer.
+* consider adding user-defined name of the device, to be saved in EEPROM, to be able to distinguish between instances of the same device connected to one computer.
 * add extra delay after power-on, before enabling devices, to prevent flip-flops on relays in case USB hub is re-initialized few times during post and boot.

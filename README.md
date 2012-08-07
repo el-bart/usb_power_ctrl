@@ -1,2 +1,1 @@
-usb_power_ctrl
-==============
+doc/readme.txt
