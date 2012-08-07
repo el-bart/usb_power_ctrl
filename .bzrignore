@@ -1,0 +1,7 @@
+*.?#?
+*.hex
+*.out
+*.map
+*.bin
+gen
+*.orig

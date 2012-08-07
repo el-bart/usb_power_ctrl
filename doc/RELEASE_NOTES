@@ -1,0 +1,31 @@
+-- v1.0.0 --
+* added watchdog for controlling uC's operations.
+* implemented reset, when USB is no longer in use, but power is still supplied.
+
+-- v0.4.1 --
+* added missing pull-down resistors from transistors' base to the ground.
+
+-- v0.4.0 --
+* added exception handing in GUI.
+* fixed problem with opening serial port on windows.
+* changed GUI script's extension from .py to .pyw - this disables serial console on windows.
+* added prerequisites installation instructions.
+
+-- v0.3.0 --
+* python module for controlling the device added.
+* command line script for controlling device added.
+* GUI has been implemented in python.
+* installation has been described.
+
+-- v0.2.0 --
+* protocol updated, to make it more coherent.
+* minor typos fixed.
+
+-- v0.1.1 --
+* USART transmission updated.
+* "toy" applications added for testing.
+* documentation added.
+
+-- v0.1.0 --
+* initial version of the board.
+* application skeleton.
